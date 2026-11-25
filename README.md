@@ -21,6 +21,8 @@ A demo reel made with the app plays before you sign in.
 
 The app uses the `<polli-connect>` button, so visitors sign in with their own Pollinations account and spend from their own balance (capped at the budget they approve). Nobody pastes a key, and the key only lives in the browser tab. A reel usually costs a few cents.
 
+The `pk_` app key in `index.html` is a publishable key: it only identifies the app on the consent screen and can't spend anything.
+
 ## Run it yourself
 
 It's one static `index.html`, no build step. Serve the folder with any static server:
