@@ -1,0 +1,21 @@
+{
+  "title": "Floor Thirteen",
+  "character": "a woman in her late twenties with dark wavy shoulder-length hair, wearing a fitted charcoal blazer over a white blouse",
+  "voice": "en-US-Harper",
+  "style": "cinematic semi-realistic digital painting, moody film lighting, rich shadows, subtle film grain",
+  "lines": [
+    {"say": "I work nights on the forty-first floor. Nobody else is up here after two.",
+     "scene": "the narrator alone at a desk in a dark open-plan office high in a skyscraper, one desk lamp on, Chicago skyline lights through tall windows, wide shot"},
+    {"say": "Tonight the elevator opened on its own, and one button was glowing. Thirteen.",
+     "scene": "the narrator standing in front of open brass elevator doors in a dark hallway, warm light spilling out, a single glowing button on the panel, medium shot"},
+    {"say": "This building has no thirteenth floor. They skipped it when it was built.",
+     "scene": "close-up of an elevator button panel with brass buttons, the narrator's hand hovering near one softly glowing blank button, shallow depth of field"},
+    {"say": "I stepped in anyway. The doors closed, and the music stopped.",
+     "scene": "inside an old brass-lined elevator, the narrator's tense reflection in the polished doors, light flickering overhead, low angle"},
+    {"say": "They opened on a hallway lit by candles. Every door had my name on it.",
+     "scene": "a long old-fashioned hotel hallway lit only by candles in wall sconces, dozens of identical wooden doors, the narrator seen from behind at the entrance, symmetrical composition"},
+    {"say": "Then a phone started ringing behind the first door.",
+     "scene": "the narrator's hand reaching for an antique brass doorknob, thin warm light under the door, candlelight, dramatic close-up"}
+  ],
+  "question": "Would you open that door? Yes, or no?"
+}

@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shiver Reels: 30-second story reels</title>
+<meta name="description" content="Type a spooky idea, get a 30-second vertical story reel with script, scenes, narration and captions. Runs on your own Pollinations balance.">
+<script defer src="https://cdn.jsdelivr.net/npm/@pollinations/ui@0.1.0-alpha.20/dist/connect.js"></script>
+<style>
+@font-face { font-family: "Archivo Black"; src: url("fonts/ArchivoBlack-Regular.ttf") format("truetype"); font-display: swap; }
+:root { --bg:#0b0b10; --panel:#15151d; --line:#262633; --text:#ececf1; --dim:#9a9aad; --acc:#ffd84d; --red:#ff5c5c; --green:#46d68c; }
+* { box-sizing: border-box; }
+body { margin:0; background:radial-gradient(1200px 600px at 70% -10%, #2a1630 0%, transparent 60%), var(--bg); color:var(--text);
+  font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; min-height:100vh; }
+header { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:16px 22px; border-bottom:1px solid var(--line); }
+.brand { font-family:"Archivo Black", system-ui; font-size:22px; letter-spacing:.5px; }
+.brand span { color:var(--acc); }
+main { max-width:1080px; margin:0 auto; padding:22px; display:grid; grid-template-columns: 1fr 380px; gap:26px; }
+@media (max-width: 860px) { main { grid-template-columns: 1fr; } }
+h1 { font-family:"Archivo Black", system-ui; font-size:30px; line-height:1.1; margin:4px 0 8px; }
+p.lead { color:var(--dim); margin:0 0 18px; }
+.card { background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:16px; margin-bottom:16px; }
+label { display:block; font-size:12px; text-transform:uppercase; letter-spacing:.08em; color:var(--dim); margin:10px 0 6px; }
+input, select, textarea { width:100%; background:#0f0f15; color:var(--text); border:1px solid var(--line); border-radius:10px; padding:10px 12px; font:inherit; }
+textarea { resize:vertical; min-height:44px; }
+.row { display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px; }
+@media (max-width: 560px) { .row { grid-template-columns: 1fr; } }
+button { background:var(--acc); color:#111; border:0; border-radius:10px; padding:11px 16px; font-weight:700; font-size:15px; cursor:pointer; }
+button.ghost { background:transparent; color:var(--text); border:1px solid var(--line); }
+button:disabled { opacity:.45; cursor:not-allowed; }
+.actions { display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; }
+.status { color:var(--dim); font-size:14px; margin-top:10px; min-height:21px; }
+.status.err { color:var(--red); }
+.bar { height:4px; background:var(--line); border-radius:4px; overflow:hidden; margin-top:8px; }
+.bar i { display:block; height:100%; width:0; background:var(--acc); transition:width .3s; }
+.line { display:grid; grid-template-columns: 26px 1fr; gap:8px; margin-top:12px; }
+.line b { color:var(--acc); font-family:"Archivo Black", system-ui; padding-top:9px; }
+.line textarea.scene { margin-top:6px; font-size:13px; color:var(--dim); }
+.stage { position:sticky; top:16px; align-self:start; }
+canvas { width:100%; aspect-ratio:9/16; border-radius:16px; background:#000; display:block; border:1px solid var(--line); }
+.hint { color:var(--dim); font-size:13px; }
+.signin { display:flex; align-items:center; gap:10px; }
+footer { text-align:center; color:var(--dim); font-size:13px; padding:26px; }
+footer a { color:var(--dim); }
+.hidden { display:none; }
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">SHIVER<span>.</span>REELS</div>
+  <div class="signin"><polli-connect budget="2" expiry="7" models="text,image,audio"></polli-connect></div>
+</header>
+
+<main>
+  <section>
+    <h1>Type a spooky idea.<br>Get a 30-second reel.</h1>
+    <p class="lead">Script, scenes, narration and word-by-word captions, ending with a YES/NO question for your comments. Sign in with Pollinations and it runs on your own balance, usually a few cents per reel.</p>
+
+    <div class="card">
+      <label for="premise">Your idea</label>
+      <textarea id="premise" rows="2" placeholder="A hotel elevator that stops at a floor that isn't on the panel">A hotel elevator that stops at a floor that isn't on the panel</textarea>
+      <div class="row">
+        <div><label for="city">City</label><input id="city" value="Chicago"></div>
+        <div><label for="genre">Genre</label>
+          <select id="genre"><option>Horror</option><option>Mystery</option><option>Urban legend</option><option>Sci-fi</option></select></div>
+        <div><label for="voice">Narrator voice</label>
+          <select id="voice">
+            <option value="en-US-Harper">Harper (female)</option><option value="en-US-Olivia">Olivia (female)</option>
+            <option value="en-US-Iris">Iris (female)</option><option value="en-US-Sage">Sage (female)</option>
+            <option value="en-US-Ethan">Ethan (male)</option><option value="en-US-Grant">Grant (male)</option>
+            <option value="en-US-Jasper">Jasper (male)</option></select></div>
+      </div>
+      <label for="style">Look</label>
+      <select id="style">
+        <option value="cinematic semi-realistic digital painting, moody film lighting, rich shadows, subtle film grain">Cinematic painting</option>
+        <option value="dark photorealistic film still, 35mm, low key lighting, shallow depth of field">Dark film still</option>
+        <option value="anime noir illustration, dramatic shadows, muted palette with neon accents">Anime noir</option>
+        <option value="black and white comic ink illustration, heavy shadows, halftone texture">Comic ink</option>
+      </select>
+      <div class="actions">
+        <button id="btnWrite">1. Write the script</button>
+      </div>
+      <div class="status" id="status1"></div>
+    </div>
+
+    <div class="card hidden" id="scriptCard">
+      <label for="title">Title</label><input id="title">
+      <label for="character">Narrator look (kept the same in every scene)</label><textarea id="character" rows="2"></textarea>
+      <div id="lines"></div>
+      <label for="question">Ending question</label><input id="question">
+      <div class="actions">
+        <button id="btnMake">2. Make the reel</button>
+        <button class="ghost" id="btnRewrite">Rewrite script</button>
+      </div>
+      <div class="bar"><i id="prog"></i></div>
+      <div class="status" id="status2"></div>
+    </div>
+  </section>
+
+  <aside class="stage">
+    <canvas id="cv" width="720" height="1280"></canvas>
+    <div class="actions">
+      <button id="btnPlay">Play</button>
+      <button class="ghost" id="btnSave">Download video</button>
+    </div>
+    <div class="status hint" id="status3">This is a demo reel made with the app. Make your own on the left.</div>
+  </aside>
+</main>
+
+<footer>
+  Built with <a href="https://pollinations.ai/?ref=badge" target="_blank" rel="noopener">pollinations.ai</a> (text, image and voice models).
+  Your key stays in this tab only. <a href="https://github.com/tojievfk/shiver-reels" target="_blank" rel="noopener">Source</a>
+</footer>
+
+<script>
+const API = "https://gen.pollinations.ai";
+const IMG_MODEL = "klein", TTS_MODEL = "microsoft/mai-voice-2.1", TEXT_MODEL = "openai";
+const W = 720, H = 1280;
+const $ = (s) => document.querySelector(s);
+const cv = $("#cv"), g = cv.getContext("2d");
+let KEY = null, story = null, reel = null, actx = null, playing = null;
+
+// ---------- sign in ----------
+const connect = document.querySelector("polli-connect");
+function syncKey() { KEY = connect && connect.apiKey ? connect.apiKey : null; refreshButtons(); }
+connect.addEventListener("change", syncKey);
+customElements.whenDefined("polli-connect").then(syncKey);
+function refreshButtons() {
+  $("#btnWrite").textContent = KEY ? "1. Write the script" : "Sign in with Pollinations to start";
+}
+
+function setStatus(id, msg, err) { const el = $(id); el.textContent = msg || ""; el.classList.toggle("err", !!err); }
+function needKey() {
+  if (KEY) return true;
+  setStatus("#status1", "Sign in with Pollinations first (button at the top right).", true);
+  return false;
+}
+function authHeaders(json) {
+  const h = { Authorization: "Bearer " + KEY };
+  if (json) h["Content-Type"] = "application/json";
+  return h;
+}
+async function retry(fn, tries = 3) {
+  let last;
+  for (let i = 0; i < tries; i++) {
+    try { return await fn(i); } catch (e) { last = e; await new Promise(r => setTimeout(r, 1200 * (i + 1))); }
+  }
+  throw last;
+}
+
+// ---------- step 1: script ----------
+const SYS = `You write scripts for 30-second vertical story videos told in first person.
+Return only JSON: {"title": string, "character": string, "lines": [{"say": string, "scene": string}], "question": string}.
+Rules:
+- Exactly 6 lines. Each "say" is spoken narration, 8 to 15 words. All six together are 70 to 85 words.
+- Line 1 is a hook that makes people stop scrolling. Build tension. Line 6 is a cliffhanger.
+- Plain spoken English. No stage directions, no emojis, no hashtags.
+- "character": one sentence describing how the narrator looks (age, hair, outfit). Tasteful, fully clothed.
+- "scene": what the picture for that line shows: setting, lighting, camera angle, what the narrator is doing. Never ask for readable text, signs with words, or logos.
+- "question": asks the viewer what they would do next, answerable with yes or no, ending with "Yes, or no?".
+- Use a real, recognizable kind of place in the given city.`;
+
+function parseJSON(txt) {
+  const a = txt.indexOf("{"), b = txt.lastIndexOf("}");
+  return JSON.parse(txt.slice(a, b + 1));
+}
+async function writeStory() {
+  const user = `Idea: ${$("#premise").value.trim()}\nCity: ${$("#city").value.trim() || "New York"}\nGenre: ${$("#genre").value}`;
+  return retry(async () => {
+    const r = await fetch(API + "/v1/chat/completions", {
+      method: "POST", headers: authHeaders(true),
+      body: JSON.stringify({ model: TEXT_MODEL, seed: Math.floor(Math.random() * 1e9),
+        response_format: { type: "json_object" },
+        messages: [{ role: "system", content: SYS }, { role: "user", content: user }] })
+    });
+    if (!r.ok) throw new Error("text model " + r.status);
+    const j = await r.json();
+    const s = parseJSON(j.choices[0].message.content);
+    if (!Array.isArray(s.lines) || s.lines.length < 4 || !s.lines.every(l => l.say && l.scene)) throw new Error("bad script");
+    return s;
+  });
+}
+function showScript(s) {
+  $("#scriptCard").classList.remove("hidden");
+  $("#title").value = s.title || "";
+  $("#character").value = s.character || "";
+  $("#question").value = s.question || "";
+  const box = $("#lines"); box.innerHTML = "";
+  s.lines.forEach((l, i) => {
+    const d = document.createElement("div"); d.className = "line";
+    const n = document.createElement("b"); n.textContent = i + 1;
+    const col = document.createElement("div");
+    const say = document.createElement("textarea"); say.className = "say"; say.rows = 2; say.value = l.say;
+    const sc = document.createElement("textarea"); sc.className = "scene"; sc.rows = 2; sc.value = l.scene;
+    col.append(say, sc); d.append(n, col); box.append(d);
+  });
+}
+function readScript() {
+  const lines = [...document.querySelectorAll("#lines .line")].map(d => ({
+    say: d.querySelector(".say").value.trim(), scene: d.querySelector(".scene").value.trim() })).filter(l => l.say);
+  return { title: $("#title").value.trim(), character: $("#character").value.trim(), question: $("#question").value.trim(), lines };
+}
+async function onWrite() {
+  if (!needKey()) return;
+  $("#btnWrite").disabled = true; $("#btnRewrite").disabled = true;
+  setStatus("#status1", "Writing your script...");
+  try { story = await writeStory(); showScript(story); setStatus("#status1", "Done. Edit anything you like, then make the reel."); }
+  catch (e) { setStatus("#status1", "Couldn't write the script (" + e.message + "). Try again.", true); }
+  $("#btnWrite").disabled = false; $("#btnRewrite").disabled = false;
+}
+$("#btnWrite").onclick = onWrite;
+$("#btnRewrite").onclick = onWrite;
+
+// ---------- step 2: images + voice ----------
+async function makeImage(prompt, seed) {
+  const url = `${API}/image/${encodeURIComponent(prompt)}?model=${IMG_MODEL}&width=${W}&height=${H}&seed=${seed}&nologo=true`;
+  return retry(async () => {
+    const r = await fetch(url, { headers: authHeaders(false) });
+    if (!r.ok) throw new Error("image " + r.status);
+    const b = await r.blob();
+    if (b.size < 5000) throw new Error("image too small");
+    return b;
+  });
+}
+async function speak(text, voice) {
+  return retry(async () => {
+    const r = await fetch(API + "/v1/audio/speech", {
+      method: "POST", headers: authHeaders(true),
+      body: JSON.stringify({ model: TTS_MODEL, voice, input: text, response_format: "mp3" })
+    });
+    if (!r.ok) throw new Error("voice " + r.status);
+    const b = await r.arrayBuffer();
+    if (b.byteLength < 1500) throw new Error("voice too short");
+    return b;
+  });
+}
+async function pool(items, limit, fn, onDone) {
+  const out = new Array(items.length); let next = 0;
+  async function worker() { while (next < items.length) { const i = next++; out[i] = await fn(items[i], i); onDone(); } }
+  await Promise.all(Array.from({ length: Math.min(limit, items.length) }, worker));
+  return out;
+}
+async function onMake() {
+  if (!needKey()) return;
+  const s = readScript();
+  if (s.lines.length < 2) return setStatus("#status2", "Add at least two lines.", true);
+  if (!s.question) s.question = "Would you keep going? Yes, or no?";
+  $("#btnMake").disabled = true; stopPlayback();
+  const style = $("#style").value, voice = $("#voice").value;
+  const total = s.lines.length * 2 + 1; let done = 0;
+  const tick = () => { done++; $("#prog").style.width = (100 * done / total) + "%"; setStatus("#status2", `Making scenes and voice... ${done}/${total}`); };
+  $("#prog").style.width = "0%"; setStatus("#status2", "Making scenes and voice...");
+  try {
+    const base = Math.floor(Math.random() * 1e6);
+    const prompts = s.lines.map(l => `${style}. ${l.scene}. The narrator: ${s.character}. Vertical 9:16 composition, no text, no watermark.`);
+    const [imgs, voices] = await Promise.all([
+      pool(prompts, 3, (p, i) => makeImage(p, base + i), tick),
+      pool([...s.lines.map(l => l.say), s.question], 3, t => speak(t, voice), tick)
+    ]);
+    reel = await assemble(s, imgs, voices);
+    setStatus("#status2", "Your reel is ready. Press Play, or download it.");
+    setStatus("#status3", `${s.title || "Your reel"}: ${reel.total.toFixed(1)} seconds.`);
+    drawFrame(0.01);
+    play(false);
+  } catch (e) {
+    setStatus("#status2", "Something failed (" + e.message + "). Your script is kept, try again.", true);
+  }
+  $("#btnMake").disabled = false;
+}
+$("#btnMake").onclick = onMake;
+
+// ---------- assemble timeline ----------
+function ctxAudio() { if (!actx) actx = new (window.AudioContext || window.webkitAudioContext)(); return actx; }
+function wordTimes(text, start, dur) {
+  const words = text.split(/\s+/).filter(Boolean);
+  const wts = words.map(w => w.replace(/[^\w']/g, "").length + 2 + (/[.,!?;:]$/.test(w) ? 3 : 0));
+  const sum = wts.reduce((a, b) => a + b, 0); let t = start; const span = dur * 0.96;
+  return words.map((w, i) => { const o = { w, t }; t += span * wts[i] / sum; return o; });
+}
+function chunk(words) {
+  const out = []; let cur = [];
+  words.forEach(w => { cur.push(w); if (cur.length >= 3 || /[.,!?;:]$/.test(w.w)) { out.push(cur); cur = []; } });
+  if (cur.length) out.push(cur);
+  return out;
+}
+async function assemble(s, imgBlobs, voiceBufs) {
+  const ac = ctxAudio();
+  const decoded = await Promise.all(voiceBufs.map(b => ac.decodeAudioData(b.slice(0))));
+  const imgs = await Promise.all(imgBlobs.map(b => createImageBitmap(b)));
+  const gap = 0.16; let t = 0.4;
+  const segs = s.lines.map((l, i) => {
+    const d = decoded[i].duration; const seg = { kind: "line", img: imgs[i], start: t, dur: d, text: l.say };
+    seg.chunks = chunk(wordTimes(l.say, t, d)); t += d + gap; return seg;
+  });
+  const q = decoded[decoded.length - 1];
+  const qseg = { kind: "question", img: imgs[imgs.length - 1], start: t + 0.15, dur: q.duration, text: s.question };
+  t = qseg.start + q.duration + 1.1;
+  const total = t, sr = ac.sampleRate, n = Math.ceil(total * sr);
+  const out = ac.createBuffer(1, n, sr), o = out.getChannelData(0);
+  const put = (buf, at) => {
+    const off = Math.floor(at * sr), chs = buf.numberOfChannels;
+    for (let c = 0; c < chs; c++) { const d = buf.getChannelData(c); for (let i = 0; i < d.length && off + i < n; i++) o[off + i] += d[i] / chs; }
+  };
+  segs.forEach((sg, i) => put(decoded[i], sg.start)); put(q, qseg.start);
+  // low ambient drone, fades in and out
+  for (let i = 0; i < n; i++) {
+    const x = i / sr, env = Math.min(1, x / 1.5, (total - x) / 1.2);
+    const lfo = 0.6 + 0.4 * Math.sin(2 * Math.PI * 0.11 * x);
+    o[i] += env * lfo * (0.028 * Math.sin(2 * Math.PI * 55 * x) + 0.018 * Math.sin(2 * Math.PI * 82.4 * x + 1.3) + 0.01 * Math.sin(2 * Math.PI * 110.6 * x));
+  }
+  // heartbeat under the question
+  for (let b = qseg.start; b < total - 0.4; b += 0.85) {
+    [0, 0.22].forEach((k, j) => {
+      const s0 = Math.floor((b + k) * sr), len = Math.floor(0.18 * sr);
+      for (let i = 0; i < len && s0 + i < n; i++) { const x = i / sr; o[s0 + i] += (j ? 0.16 : 0.24) * Math.exp(-x * 26) * Math.sin(2 * Math.PI * 52 * x); }
+    });
+  }
+  let peak = 0; for (let i = 0; i < n; i++) peak = Math.max(peak, Math.abs(o[i]));
+  if (peak > 0.98) for (let i = 0; i < n; i++) o[i] *= 0.98 / peak;
+  return { title: s.title, segs, qseg, total, audio: out };
+}
+
+// ---------- drawing ----------
+const vign = document.createElement("canvas"); vign.width = W; vign.height = H;
+(() => { const v = vign.getContext("2d"); const gr = v.createRadialGradient(W / 2, H * 0.45, H * 0.2, W / 2, H / 2, H * 0.75);
+  gr.addColorStop(0, "rgba(0,0,0,0)"); gr.addColorStop(1, "rgba(0,0,0,0.75)"); v.fillStyle = gr; v.fillRect(0, 0, W, H);
+  const lg = v.createLinearGradient(0, H * 0.55, 0, H); lg.addColorStop(0, "rgba(0,0,0,0)"); lg.addColorStop(1, "rgba(0,0,0,0.55)");
+  v.fillStyle = lg; v.fillRect(0, 0, W, H); })();
+const grain = document.createElement("canvas"); grain.width = 256; grain.height = 256;
+(() => { const c = grain.getContext("2d"), d = c.createImageData(256, 256);
+  for (let i = 0; i < d.data.length; i += 4) { const v = Math.random() * 255; d.data[i] = d.data[i + 1] = d.data[i + 2] = v; d.data[i + 3] = 22; }
+  c.putImageData(d, 0, 0); })();
+
+function drawImage(img, p, idx, t0) {
+  const zoomIn = idx % 2 === 0;
+  let sc = zoomIn ? 1.04 + 0.08 * p : 1.12 - 0.08 * p;
+  if (t0 < 0.12) sc += 0.05 * (1 - t0 / 0.12); // punch-in on each cut
+  const base = Math.max(W / img.width, H / img.height) * sc;
+  const dw = img.width * base, dh = img.height * base;
+  const panX = (idx % 3 - 1) * 0.03 * W * (p - 0.5);
+  g.drawImage(img, (W - dw) / 2 + panX, (H - dh) / 2, dw, dh);
+}
+function wrapText(text, maxW) {
+  const words = text.split(/\s+/); const lines = []; let cur = "";
+  words.forEach(w => { const t = cur ? cur + " " + w : w; if (g.measureText(t).width > maxW && cur) { lines.push(cur); cur = w; } else cur = t; });
+  if (cur) lines.push(cur); return lines;
+}
+function outlined(text, x, y, fill) {
+  g.lineJoin = "round"; g.lineWidth = 10; g.strokeStyle = "rgba(0,0,0,0.9)"; g.strokeText(text, x, y);
+  g.fillStyle = fill; g.fillText(text, x, y);
+}
+function drawCaption(seg, t) {
+  const words = seg.chunks.flat(); if (!words.length) return;
+  let ci = seg.chunks.findIndex(c => t < (c[c.length - 1].t + 0.05));
+  if (ci < 0) ci = seg.chunks.length - 1;
+  const ch = seg.chunks[ci];
+  g.font = '60px "Archivo Black", system-ui'; g.textBaseline = "middle"; g.textAlign = "left";
+  const parts = ch.map(w => w.w.toUpperCase()); const space = g.measureText(" ").width;
+  const widths = parts.map(p => g.measureText(p).width); const tw = widths.reduce((a, b) => a + b, 0) + space * (parts.length - 1);
+  let x = (W - tw) / 2; const y = H * 0.7;
+  const pop = Math.min(1, (t - ch[0].t) / 0.12), fit = Math.min(1, (W - 60) / tw), k = (0.9 + 0.1 * pop) * fit;
+  g.save(); g.translate(W / 2, y); g.scale(k, k); g.translate(-W / 2, -y);
+  parts.forEach((p, i) => { const on = t >= ch[i].t; outlined(p, x, y, on && (i === ch.length - 1 || t < ch[i + 1].t) ? "#ffd84d" : "#ffffff"); x += widths[i] + space; });
+  g.restore();
+}
+function pill(x, y, w, h, color, label) {
+  g.fillStyle = color; g.beginPath(); g.roundRect(x, y, w, h, h / 2); g.fill();
+  g.fillStyle = "#111"; g.font = '46px "Archivo Black", system-ui'; g.textAlign = "center"; g.textBaseline = "middle"; g.fillText(label, x + w / 2, y + h / 2 + 2);
+}
+function drawFrame(t) {
+  if (!reel) return;
+  g.fillStyle = "#000"; g.fillRect(0, 0, W, H);
+  const segs = reel.segs; let i = segs.length - 1;
+  for (let k = 0; k < segs.length; k++) { const end = k + 1 < segs.length ? segs[k + 1].start : reel.qseg.start; if (t < end) { i = k; break; } }
+  const sg = segs[i]; const end = i + 1 < segs.length ? segs[i + 1].start : reel.total;
+  const segStart = i === 0 ? 0 : sg.start;
+  drawImage(sg.img, Math.max(0, Math.min(1, (t - segStart) / (end - segStart))), i, t - segStart);
+  g.drawImage(vign, 0, 0);
+  g.globalCompositeOperation = "overlay"; g.drawImage(grain, -Math.random() * 120, -Math.random() * 120, W + 240, H + 240); g.globalCompositeOperation = "source-over";
+  // title card
+  if (t < 2.0 && reel.title) {
+    const a = t < 1.5 ? 1 : 1 - (t - 1.5) / 0.5; g.globalAlpha = a;
+    g.font = '58px "Archivo Black", system-ui'; g.textAlign = "center"; g.textBaseline = "middle";
+    wrapText(reel.title.toUpperCase(), W - 120).forEach((ln, k) => outlined(ln, W / 2, H * 0.16 + k * 66, "#ffffff"));
+    g.globalAlpha = 1;
+  }
+  const q = reel.qseg;
+  if (t >= q.start - 0.1) {
+    const a = Math.min(1, (t - q.start + 0.1) / 0.4);
+    g.fillStyle = `rgba(0,0,0,${0.62 * a})`; g.fillRect(0, 0, W, H); g.globalAlpha = a;
+    g.font = '50px "Archivo Black", system-ui'; g.textAlign = "center"; g.textBaseline = "middle";
+    const qText = q.text.replace(/\s*yes,?\s*or\s*no\??\s*$/i, "") || q.text;
+    const lines = wrapText(qText.toUpperCase(), W - 110); const y0 = H * 0.4 - (lines.length - 1) * 31;
+    lines.forEach((ln, k) => outlined(ln, W / 2, y0 + k * 62, "#ffffff"));
+    const py = y0 + lines.length * 62 + 50, beat = 1 + 0.04 * Math.max(0, Math.sin((t - q.start) * Math.PI * 2 / 0.85));
+    g.save(); g.translate(W / 2, py + 45); g.scale(beat, beat); g.translate(-W / 2, -(py + 45));
+    pill(W / 2 - 260, py, 230, 90, "#46d68c", "YES"); pill(W / 2 + 30, py, 230, 90, "#ff5c5c", "NO"); g.restore();
+    g.font = '30px system-ui'; g.fillStyle = "#ececf1"; g.textAlign = "center"; g.fillText("Tell me in the comments", W / 2, py + 150);
+    g.globalAlpha = 1;
+  } else if (t >= sg.start) {
+    drawCaption(sg, t);
+  }
+}
+
+// ---------- playback & export ----------
+function stopPlayback() { if (playing) { try { playing.src.stop(); } catch (e) {} cancelAnimationFrame(playing.raf); playing = null; } $("#btnPlay").textContent = "Play"; }
+function play(record) {
+  if (!reel) return Promise.resolve();
+  stopPlayback();
+  const ac = ctxAudio(); ac.resume();
+  const src = ac.createBufferSource(); src.buffer = reel.audio; src.connect(ac.destination);
+  let dest = null; if (record) { dest = ac.createMediaStreamDestination(); src.connect(dest); }
+  const t0 = ac.currentTime + 0.08; src.start(t0);
+  $("#btnPlay").textContent = "Stop";
+  return new Promise(resolve => {
+    playing = { src, dest, raf: 0, resolve };
+    const loop = () => {
+      const t = ac.currentTime - t0;
+      drawFrame(Math.max(0, t));
+      if (t < reel.total && playing) playing.raf = requestAnimationFrame(loop);
+      else { stopPlayback(); resolve(); }
+    };
+    loop();
+  });
+}
+$("#btnPlay").onclick = () => { if (playing) stopPlayback(); else play(false); };
+
+function pickMime() {
+  const opts = ["video/mp4;codecs=avc1.42E01E,mp4a.40.2", "video/mp4", "video/webm;codecs=vp9,opus", "video/webm"];
+  return opts.find(m => window.MediaRecorder && MediaRecorder.isTypeSupported(m)) || "";
+}
+$("#btnSave").onclick = async () => {
+  if (!reel) return;
+  if (!window.MediaRecorder) return setStatus("#status3", "This browser can't record video. Try Chrome or Edge.", true);
+  const mime = pickMime(); $("#btnSave").disabled = true; $("#btnPlay").disabled = true;
+  setStatus("#status3", "Recording in real time, keep this tab open and visible...");
+  const ac = ctxAudio(); stopPlayback();
+  const vstream = cv.captureStream(30); const chunks = [];
+  const ready = new Promise(res => {
+    const startRec = async () => {
+      const done = play(true);
+      const stream = new MediaStream([...vstream.getVideoTracks(), ...playing.dest.stream.getAudioTracks()]);
+      const rec = new MediaRecorder(stream, { mimeType: mime || undefined, videoBitsPerSecond: 6000000 });
+      rec.ondataavailable = e => e.data.size && chunks.push(e.data);
+      rec.onstop = () => res();
+      rec.start(250); await done; setTimeout(() => rec.stop(), 300);
+    };
+    startRec();
+  });
+  await ready;
+  const type = mime.startsWith("video/mp4") ? "mp4" : "webm";
+  const blob = new Blob(chunks, { type: mime || "video/webm" });
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob);
+  a.download = (reel.title || "reel").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") + "." + type; a.click();
+  setStatus("#status3", `Saved as ${type.toUpperCase()}. Vertical 720x1280, ready for Reels, Shorts or TikTok.`);
+  $("#btnSave").disabled = false; $("#btnPlay").disabled = false;
+};
+
+// ---------- demo reel ----------
+(async function loadDemo() {
+  try {
+    await document.fonts.load('60px "Archivo Black"');
+    const s = await (await fetch("demo/story.json")).json();
+    const imgs = await Promise.all(s.lines.map((_, i) => fetch(`demo/${i + 1}.jpg`).then(r => r.blob())));
+    const voices = await Promise.all([...s.lines.map((_, i) => `demo/v${i + 1}.mp3`), "demo/vq.mp3"].map(u => fetch(u).then(r => r.arrayBuffer())));
+    reel = await assemble(s, imgs, voices);
+    drawFrame(0.6);
+  } catch (e) { setStatus("#status3", "Demo couldn't load. You can still make your own reel."); }
+})();
+refreshButtons();
+</script>
+</body>
+</html>
