@@ -1,0 +1,18 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Architecture</title>
+<style>body{margin:0;background:#fff;font:15px system-ui,sans-serif;color:#111}h1{font-size:22px;margin:24px 32px 6px}p{margin:0 32px 12px;color:#444}
+.row{display:flex;align-items:center;gap:14px;margin:18px 32px;flex-wrap:nowrap}.box{border:2px solid #333;border-radius:10px;padding:12px 14px;width:170px;text-align:center;background:#f6f6f6}.box b{display:block;margin-bottom:4px}.yt{border-color:#e00;background:#fff3f3}.arrow{font-size:26px;color:#555}.note{font-size:13px;color:#555}</style></head><body>
+<h1>Daily Shorts Uploader: architecture</h1>
+<p>Single-owner, server-side job. No end users, no UI, no third-party channels.</p>
+<div class="row">
+<div class="box"><b>Scheduler</b><span class="note">cron trigger, once a day</span></div><div class="arrow">→</div>
+<div class="box"><b>GitHub Actions job</b><span class="note">Python script, private repo</span></div><div class="arrow">→</div>
+<div class="box"><b>Render episode</b><span class="note">owner's original 30 s video (MP4)</span></div></div>
+<div class="row" style="margin-left:220px">
+<div class="arrow">↓</div></div>
+<div class="row">
+<div class="box"><b>Encrypted secrets</b><span class="note">OAuth client ID/secret, refresh token (owner's channel only)</span></div><div class="arrow">→</div>
+<div class="box yt"><b>Google OAuth 2.0</b><span class="note">refresh → short-lived access token</span></div><div class="arrow">→</div>
+<div class="box yt"><b>YouTube Data API v3</b><span class="note">videos.insert (resumable upload) · channels.list mine=true</span></div><div class="arrow">→</div>
+<div class="box"><b>Owner's channel</b><span class="note">1 Short per day</span></div></div>
+<p class="note">Stored: only the uploaded video ID in a private log (prevents duplicate posts). No YouTube user data is collected, shared, or used for ads or AI training. Access revocable at myaccount.google.com/permissions.</p>
+</body></html>

@@ -1,0 +1,12 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>User flow</title>
+<style>body{margin:0;background:#fff;font:15px system-ui,sans-serif;color:#111}h1{font-size:22px;margin:24px 32px 6px}p{margin:0 32px 12px;color:#444}
+ol{margin:10px 32px;padding-left:22px}li{margin:10px 0;padding:10px 12px;border:2px solid #333;border-radius:10px;background:#f6f6f6;list-style-position:inside}li.yt{border-color:#e00;background:#fff3f3}.h{font-weight:700}</style></head><body>
+<h1>Daily Shorts Uploader: user flow</h1>
+<p>The only user is the channel owner. Setup happens once; after that the job runs unattended.</p>
+<ol>
+<li class="yt"><span class="h">One-time setup (owner):</span> signs in with Google, picks their own channel, and grants youtube.upload and youtube.readonly on the OAuth consent screen. The refresh token is stored as an encrypted secret.</li>
+<li><span class="h">Every day:</span> the scheduler starts the job, which renders the day's episode (owner's original content).</li>
+<li class="yt"><span class="h">Upload:</span> the job exchanges the refresh token for an access token and calls videos.insert with title, description, made-for-kids = false and synthetic-media disclosure; privacy = public.</li>
+<li class="yt"><span class="h">Confirm:</span> channels.list (mine=true) checks the destination is the owner's channel; the new video ID is written to a private log.</li>
+<li><span class="h">Revoke any time:</span> the owner removes access at myaccount.google.com/permissions; uploads stop immediately.</li>
+</ol></body></html>
